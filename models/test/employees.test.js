@@ -3,10 +3,6 @@ const Employee = require('../employees.models');
 const expect = require('chai').expect;
 
 describe('Employee', () => {
-  after(() => {
-    mongoose.models = {};
-  });
-
   it('should throw an error if there are missing args', () => {
     const cases = [
       { firstName: 'John', lastName: 'Doe' },
