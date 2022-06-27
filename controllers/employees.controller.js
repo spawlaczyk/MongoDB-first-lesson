@@ -1,4 +1,5 @@
 const Employee = require('../models/employees.models');
+const Department = require('../models/department.models');
 
 exports.getAll = async (req, res) => {
   try {
@@ -33,7 +34,9 @@ exports.getById = async (req, res) => {
 exports.post = async (req, res) => {
   try {
     const { firstName, lastName, department } = req.body;
-    const newEmployee = new Employee({ firstName: firstName, lastName: lastName, department: department });
+    const Id = await Department.findOne({ name: department });
+    const departmentId = Id._id;
+    const newEmployee = new Employee({ firstName: firstName, lastName: lastName, department: departmentId });
     await newEmployee.save();
     res.json({ message: 'OK' });
   } catch(err) {
@@ -47,7 +50,9 @@ exports.put = async (req, res) => {
   try {
     const emp = await Employee.findById(req.params.id);
     if(emp) {
-      await Employee.updateOne({ _id: req.params.id }, { $set: { firstName: firstName, lastName: lastName, department: department } });
+      const Id = await Department.findOne({ name: department });
+      const departmentId = Id._id;
+      await Employee.updateOne({ _id: req.params.id }, { $set: { firstName: firstName, lastName: lastName, department: departmentId } });
       res.json({ message: 'OK' });
     } else res.status(404).json({ message: 'Not found...' });
   } catch(err) {
